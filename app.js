@@ -1,21 +1,45 @@
-//learnyoumongo 8
+//learnyoumongo 9
 let mongo = require('mongodb').MongoClient
 let url = 'mongodb://localhost:27017/learnyoumongo'
-let baselineAge = process.argv[2]
+let mysterySize = process.argv[2]
 
 mongo.connect(url, (err, db) => {
 	if (err) throw err
-	let parrots = db.collection('parrots')
-	parrots.count({
-		age: {
-			$gt: +baselineAge
-		}
-	}, (err, count) => {
+	let prices = db.collection('prices')
+	prices.aggregate([
+		{ $match: { size: mysterySize } },
+		{ $group: {
+			_id: 'average',
+			average: {
+				$avg: '$price'
+			}
+		}}
+	]).toArray((err, results) => {
 		if (err) throw err
-		console.log(count)
+		var o = results[0]
+		console.log(Number(o.average).toFixed(2))
 		db.close()
 	})
 })
+
+// //learnyoumongo 8
+// let mongo = require('mongodb').MongoClient
+// let url = 'mongodb://localhost:27017/learnyoumongo'
+// let baselineAge = process.argv[2]
+
+// mongo.connect(url, (err, db) => {
+// 	if (err) throw err
+// 	let parrots = db.collection('parrots')
+// 	parrots.count({
+// 		age: {
+// 			$gt: +baselineAge
+// 		}
+// 	}, (err, count) => {
+// 		if (err) throw err
+// 		console.log(count)
+// 		db.close()
+// 	})
+// })
 
 // //learnyoumongo 7
 // let mongo = require('mongodb').MongoClient
