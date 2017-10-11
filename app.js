@@ -1,22 +1,37 @@
-//learnyoumongo 6
+//learnyoumongo 7
 let mongo = require('mongodb').MongoClient
 let url = 'mongodb://localhost:27017/' + process.argv[2]
 
-
 mongo.connect(url, (err, db) => {
 	if (err) throw err
-	let users = db.collection('users')
-	users.update({
-		username: 'tinatime'
-	}, {
-		$set: {
-			age: 40
-		}
+	let collection = db.collection(process.argv[3])
+	collection.remove({
+		_id: process.argv[4]
 	}, (err) => {
 		if (err) throw err
 		db.close()
 	})
 })
+
+// //learnyoumongo 6
+// let mongo = require('mongodb').MongoClient
+// let url = 'mongodb://localhost:27017/' + process.argv[2]
+
+
+// mongo.connect(url, (err, db) => {
+// 	if (err) throw err
+// 	let users = db.collection('users')
+// 	users.update({
+// 		username: 'tinatime'
+// 	}, {
+// 		$set: {
+// 			age: 40
+// 		}
+// 	}, (err) => {
+// 		if (err) throw err
+// 		db.close()
+// 	})
+// })
 
 // //learnyoumongo 5
 // let mongo = require('mongodb').MongoClient
