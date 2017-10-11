@@ -1,17 +1,36 @@
-//learnyoumongo 7
+//learnyoumongo 8
 let mongo = require('mongodb').MongoClient
-let url = 'mongodb://localhost:27017/' + process.argv[2]
+let url = 'mongodb://localhost:27017/learnyoumongo'
+let baselineAge = process.argv[2]
 
 mongo.connect(url, (err, db) => {
 	if (err) throw err
-	let collection = db.collection(process.argv[3])
-	collection.remove({
-		_id: process.argv[4]
-	}, (err) => {
+	let parrots = db.collection('parrots')
+	parrots.count({
+		age: {
+			$gt: +baselineAge
+		}
+	}, (err, count) => {
 		if (err) throw err
+		console.log(count)
 		db.close()
 	})
 })
+
+// //learnyoumongo 7
+// let mongo = require('mongodb').MongoClient
+// let url = 'mongodb://localhost:27017/' + process.argv[2]
+
+// mongo.connect(url, (err, db) => {
+// 	if (err) throw err
+// 	let collection = db.collection(process.argv[3])
+// 	collection.remove({
+// 		_id: process.argv[4]
+// 	}, (err) => {
+// 		if (err) throw err
+// 		db.close()
+// 	})
+// })
 
 // //learnyoumongo 6
 // let mongo = require('mongodb').MongoClient
